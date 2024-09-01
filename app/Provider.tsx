@@ -5,8 +5,14 @@ import { ClientSideSuspense, LiveblocksProvider } from "@liveblocks/react/suspen
 import { ReactNode } from "react"
 const Provider = ({children}:{children:ReactNode}) => {
   return (
-      <LiveblocksProvider authEndpoint="/api/liveblocks-auth">
-              <ClientSideSuspense fallback={<Loader/>}>
+      <LiveblocksProvider  authEndpoint="/api/liveblocks-auth" 
+      resolveUsers={async ({userIds})=>{
+        // const user =await getClerkUser() 
+      }}
+      >
+              <ClientSideSuspense fallback={<Loader/>}
+               
+              >
                   {children}
               </ClientSideSuspense>
       </LiveblocksProvider>
