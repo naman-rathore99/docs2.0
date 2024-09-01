@@ -13,7 +13,8 @@ const router=useRouter()
         const addDocHandler = async() => {
     try {
         const room = await createDocument({ userId, email })
-        if(room) router.push(`/room/${room. id}`)
+        // if(room) router.push(`/documents/room/${room.id}`)
+            if(room) router.push(`/documents/${room.id}`);
 
     } catch (error) {
         console.log(error);
@@ -22,7 +23,7 @@ const router=useRouter()
   return (
       <Button type='submit' onClick={addDocHandler} className='gradient-blue gap-1 flex shadow-md '>
 
-       <Image src="/assets/icons/add.svg" alt='add' width={24 } height={24}/>
+       <Image src="/assets/icons/add.svg" alt='add' width={10} height={10}/>
                  <p className='hidden sm:block'>Start a black document</p>
        </Button>
   )

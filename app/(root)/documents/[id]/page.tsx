@@ -1,13 +1,14 @@
 
+import CollabRoom from '@/components/CollabRoom'
 import React from 'react'
 
-const Documnet = () => {
+const Document = () => {
     return (
 
-        <div>
-           
+        <div className='flex w-full flex-col items-center'>
+           <CollabRoom/>
         </div>
     )
 }
 
-export default Documnet 
+export default Document
