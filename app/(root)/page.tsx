@@ -8,7 +8,7 @@ import React from 'react'
 
 const Home = async () => {
   const clerkUser = await currentUser()
-  
+
   if (!clerkUser) redirect('/sign-in')
   const document = []
   return (
@@ -24,19 +24,19 @@ const Home = async () => {
       {document.length > 0 ? (
         <div></div>
       ) : (
-          <div className='document-list-empty'>
-            <Image
-              src='/assets/icons/doc.svg'
-              alt='document'
-              width={200}
-              height={200}
-              className='mx-auto' />
-            
+        <div className='document-list-empty'>
+          <Image
+            src='/assets/icons/doc.svg'
+            alt='document'
+            width={80}
+            height={80}
+            className='mx-auto' />
 
-            <AddDocumentBtn
-              userId={clerkUser.id}
-              email={clerkUser.emailAddresses[0].emailAddress}
-            />
+
+          <AddDocumentBtn
+            userId={clerkUser.id}
+            email={clerkUser.emailAddresses[0].emailAddress}
+          />
         </div>
       )}
 
