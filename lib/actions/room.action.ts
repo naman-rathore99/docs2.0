@@ -25,7 +25,7 @@ export const createDocument = async ({ userId, email }: CreateDocumentParams) =>
       usersAccesses,
       defaultAccesses: ['room:write']
     });
-    
+
     revalidatePath('/');
 
     return parseStringify(room);
@@ -35,17 +35,49 @@ export const createDocument = async ({ userId, email }: CreateDocumentParams) =>
 }
 
 
-export const getDoc=async({userId,roomId}:{userId:string,roomId:string})=>{
- try {
-   const room=await liveblocks.getRoom(roomId)
- 
-  //  const hasAccess=Object.keys(room.usersAccesses).includes(userId)
- 
-  //  if(!hasAccess){throw new Error("you have no access to this room")}
- 
-   return parseStringify(room);
- } catch (error) {
-  console.log(`error happend while creating room ${error}`);
-  
- }
+export const getDoc = async ({ userId, roomId }: { userId: string, roomId: string }) => {
+  try {
+    const room = await liveblocks.getRoom(roomId)
+
+    //  const hasAccess=Object.keys(room.usersAccesses).includes(userId)
+
+    //  if(!hasAccess){throw new Error("you have no access to this room")}
+
+    return parseStringify(room);
+  } catch (error) {
+    console.log(`error happend while creating room ${error}`);
+
+  }
+}
+
+
+
+export const updateDoc = async (roomId: string, title: string) => {
+  try {
+    const updateRoom = await liveblocks.updateRoom(roomId, {
+      metadata: {
+        title
+      }
+    })
+
+    revalidatePath(`/documents/${roomId}`)
+
+    return parseStringify(updateRoom)
+
+
+  } catch (error) {
+    console.log(`error happend while updating title ${error}`);
+  }
+}
+
+
+export const getDocs = async (email: string) => {
+  try {
+    const rooms = await liveblocks.getRooms({ userId: email })
+
+    return parseStringify(rooms);
+  } catch (error) {
+    console.log(`error happend while fetching rooms ${error}`);
+
+  }
 }
