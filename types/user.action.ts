@@ -1,5 +1,6 @@
 'use server';
 
+import { liveblocks } from "@/lib/liveblocks";
 import { parseStringify } from "@/lib/utils";
 import { clerkClient } from "@clerk/nextjs/server";
 // import { liveblocks } from "../liveblocks";
@@ -23,4 +24,26 @@ export const getClerkUsers = async ({ userIds }: { userIds: string[]}) => {
   } catch (error) {
     console.log(`Error fetching users: ${error}`);
   }
+}
+
+export const getDocumentUsers=async({roomId,currentUser,text}:{roomId:string,currentUser:string,text:string})=>{
+ try {
+   const room = await liveblocks.getRoom(roomId)
+   
+
+   const users = Object.keys(room.usersAccesses).filter((email) => email !== currentUser)
+   if (text.length) {
+     const lowerCaseText = text.toLowerCase();
+
+     const filterUsers = users.filter((email: string) => email.toLowerCase().includes(lowerCaseText))
+     
+
+     return parseStringify(filterUsers)
+   }
+   return parseStringify(users)
+
+ } catch (error) {
+  console.log(`Error happen while fetching users: ${error}`);
+  
+ }
 }
