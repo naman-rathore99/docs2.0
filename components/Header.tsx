@@ -6,7 +6,7 @@ import React from 'react'
 const Header = ({ children,className }: HeaderProps) => {
     return (
         <div className={cn( "header",className)}>
-            <Link href="/" className='md:flex=1'>
+            <Link href="/" className='md:flex-1'>
                 <Image src='/assets/icons/logo.svg'
                     alt="logo with name"
                     width={120}

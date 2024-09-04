@@ -10,13 +10,13 @@ import { Input } from "./ui/input"
 import { currentUser } from "@clerk/nextjs/server"
 import Image from "next/image.js"
 import { updateDoc } from "@/lib/actions/room.action"
+import Loader from "./Loader"
 
 
-const CollabRoom = ({ roomId, roomMetaData }: CollaborativeRoomProps) => {
+const CollabRoom = ({ roomId, roomMetaData, users, currentUserType }: CollaborativeRoomProps) => {
 
 
 
-    const currentUserType = "editor"
 
     const [title, setTitle] = useState(roomMetaData.title)
     const [editing, setEditing] = useState(false)
@@ -24,6 +24,11 @@ const CollabRoom = ({ roomId, roomMetaData }: CollaborativeRoomProps) => {
 
     const containerRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
+    useEffect(() => {
+        if (editing && inputRef.current) {
+            inputRef.current.focus()
+        }
+    }, [editing])
 
     useEffect(() => {
         const handelClickOutSide = (e: MouseEvent) => {
@@ -31,14 +36,11 @@ const CollabRoom = ({ roomId, roomMetaData }: CollaborativeRoomProps) => {
                 setEditing(false)
                 updateDoc(roomId, title)
             }
-
-
         }
         document.addEventListener('mousedown', handelClickOutSide)
         return () => {
             document.removeEventListener('mousedown', handelClickOutSide)
         }
-
     }, [roomId, title])
 
 
@@ -56,25 +58,16 @@ const CollabRoom = ({ roomId, roomMetaData }: CollaborativeRoomProps) => {
                 console.log(error)
             }
             setLoading(false)
-
         }
-
-
-        useEffect(() => {
-            if (editing && inputRef.current) {
-                inputRef.current.focus()
-            }
-        }, [editing])
-
 
 
     }
     return (
         <RoomProvider id={roomId}>
-            <ClientSideSuspense fallback={<div>Loading…</div>}>
+            <ClientSideSuspense fallback={<Loader />}>
                 <div className="collaborative-room">
                     <Header>
-                        <div ref={containerRef} className='flex w-fit items-center gap-2 justify-center'>
+                        <div ref={containerRef} className='flex w-fit items-center justify-center gap-2'>
                             {editing && !loading ? (
                                 <Input type="text"
                                     value={title}
@@ -118,7 +111,7 @@ const CollabRoom = ({ roomId, roomMetaData }: CollaborativeRoomProps) => {
                             </SignedIn>
                         </div>
                     </Header>
-                    <Editor />
+                    <Editor currentUserType={currentUserType} roomId={roomId} />
                 </div>
             </ClientSideSuspense>
         </RoomProvider>

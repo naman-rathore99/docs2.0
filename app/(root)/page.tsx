@@ -13,13 +13,13 @@ import { dateConverter } from '@/lib/utils'
 const Home = async () => {
   const clerkUser = await currentUser()
 
-  if (!clerkUser) redirect('/sign-in')
-  
-  const roomDocs=await getDocs(clerkUser.emailAddresses[0].emailAddress)
-  
+  if(!clerkUser) redirect('/sign-in')
+  const roomDocs = await getDocs(clerkUser.emailAddresses[0].emailAddress)
+
+
   return (
     <main className='home-container'>
-      <Header className='sticky top-0 left-0'>
+      <Header className='sticky left-0 top-0'>
         <div className='flex items-center gap-2 lg:gap-4'>
           notification
           <SignedIn>
@@ -27,37 +27,32 @@ const Home = async () => {
           </SignedIn>
         </div>
       </Header>
-      {getDocs.data.length > 0 ? (
+      {roomDocs.data.length > 0 ? (
         <div className='document-list-container'>
           <div className="document-list-title">
             <h3 className='text-20-semibold'>
-              all documents
+              All documents
             </h3>
             <AddDocumentBtn
               userId={clerkUser.id}
               email={clerkUser.emailAddresses[0].emailAddress}
             />
-</div>
+          </div>
 
           <ul className='document-ul'>
-            {getDocs.data.map(({ id, metadata, createAt }: any) => {
+            {roomDocs.data.map(({ id, metadata, createAt }: any) => (
               <li key={id} className='document-list-item'>
                 <Link href={`/documents/${id}`} className='flex flex-1 items-center gap-4'>
                   <div className="hidden rounded-md bg-dark-500 p-2 sm:block">
-                    <Image src="/assets/icons/doc.svg" alt='files' width={40} height={40}/>
+                    <Image src="/assets/icons/doc.svg" alt='files' width={40} height={40} />
                   </div>
-
                   <div className="space-y-1">
                     <p className="line-clamp-1 text-lg">{metadata.title}</p>
                     <p className="text-sm font-light text-blue-100">create at {dateConverter(createAt)}</p>
                   </div>
                 </Link>
-
-
-
-                
               </li>
-            })}
+            ))}
           </ul>
         </div>
       ) : (
@@ -68,8 +63,6 @@ const Home = async () => {
             width={80}
             height={80}
             className='mx-auto' />
-
-
           <AddDocumentBtn
             userId={clerkUser.id}
             email={clerkUser.emailAddresses[0].emailAddress}
