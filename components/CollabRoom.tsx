@@ -11,6 +11,7 @@ import { currentUser } from "@clerk/nextjs/server"
 import Image from "next/image.js"
 import { updateDoc } from "@/lib/actions/room.action"
 import Loader from "./Loader"
+import ShareModel from "./ShareModel"
 
 
 const CollabRoom = ({ roomId, roomMetaData, users, currentUserType }: CollaborativeRoomProps) => {
@@ -103,6 +104,12 @@ const CollabRoom = ({ roomId, roomMetaData, users, currentUserType }: Collaborat
                         </div>
                         <div className="flex w-full flex-1 justify-end gap-2 sm:gap-3">
                             <ActiveCollaborators />
+                            <ShareModel
+                                roomId={roomId}
+                                collaborators={users}
+                                creatorId={roomMetaData.createdId}
+                                currentUserType={currentUserType}
+                            />
                             <SignedOut>
                                 <SignInButton />
                             </SignedOut>
