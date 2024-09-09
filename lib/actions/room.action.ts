@@ -81,3 +81,49 @@ export const getDocs = async (email: string) => {
 
   }
 }
+
+
+
+export const updateDocumentAccess = async ({ roomId, email, userType, updateBy }: ShareDocumentParams) => {
+  try {
+    const usersAccesses: RoomAccesses = { [email]: getAccessType(userType) as AccessType }
+
+    const room = await liveblocks.updateRoom(roomId, { usersAccesses })
+
+    if (room) {
+
+    }
+
+    revalidatePath(`/document/${roomId}`)
+
+    return parseStringify(room)
+
+  } catch (error) {
+    console.log(`error happen while updating the access of room ${error}`);
+
+  }
+}
+
+
+export const removeCollbaborator = async ({ roomId, email, }: { roomId: string, email: string }) => {
+  try {
+    const room = await liveblocks.getRoom(roomId)
+
+    if (room.metadata.email === email) {
+      throw new Error(`You cannot remove your self from this document`)
+    }
+
+    const updatedRoom = await liveblocks.updateRoom(roomId, {
+      usersAccesses: {
+        [email]: null
+      }
+    })
+
+    revalidatePath(`/document/${roomId}`)
+
+    return parseStringify(updatedRoom)
+  } catch (error) {
+    console.log(`error happend while removeing collaborator ${error}`);
+
+  }
+}

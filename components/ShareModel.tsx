@@ -16,6 +16,7 @@ import { Label } from './ui/label'
 import { Input } from './ui/input'
 import UserTypeSelector from './UserTypeSelector'
 import Collaborator from './Collaborator'
+import { updateDocumentAccess } from '@/lib/actions/room.action'
 
 
 
@@ -30,6 +31,15 @@ const ShareModel = ({ roomId, creatorId, currentUserType, collaborators }: Share
 
     const [userType, setuserType] = useState('viewer')
     const shareHandler = async () => {
+
+        setLoading(true);
+        await updateDocumentAccess({
+            roomId,
+            email,
+            userType: type as UserType,
+            updatedBy: user
+        })
+        setLoading(false);
 
     }
     return (
@@ -60,7 +70,7 @@ const ShareModel = ({ roomId, creatorId, currentUserType, collaborators }: Share
                         <div className="flex flex-1 rounded-md bg-dark-400">
 
                             <Input id="email"
-                                placeHolder="Enter the email address"
+                                placeholder="Enter the email address"
                                 value={email}
                                 onOpenChange={(e) => setEmail(e.target.value)}
                                 className="share-input"
@@ -74,7 +84,7 @@ const ShareModel = ({ roomId, creatorId, currentUserType, collaborators }: Share
                         </div>
                         <Button
                             type="submit"
-                            onClick={shareDocumentHandler}
+                            onClick={shareHandler}
                             className='gradient-blue flex h-full gap-1 px-5' disabled={loading}>
 
                             {loading ? "sending ... " : "invite"}
@@ -88,7 +98,7 @@ const ShareModel = ({ roomId, creatorId, currentUserType, collaborators }: Share
                                 roomId={roomId}
                                 creatorId={creatorId}
                                 email={Collaborator.email}
-                                collaborator={collaborator}
+                                collaborator={collaborators}
                                 user={user.info}
 
 

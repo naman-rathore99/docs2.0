@@ -3,13 +3,22 @@ import React from 'react'
 import { useState } from 'react'
 import UserTypeSelector from './UserTypeSelector'
 import { Button } from './ui/button'
+import { updateDocumentAccess } from '@/lib/actions/room.action'
 
 const Collaborator = ({ roomId, creatorId, collaborator, email, user }: CollaboratorProps) => {
 
     const [userType, setUserType] = useState(collaborator.userType || "viewer")
 
-    const [loading, setLading] = useState(false)
+    const [loading, setLoading] = useState(false)
     const shareDocumentHandler = async (type: string) => {
+
+        setLoading(true);
+        await updateDocumentAccess({
+            roomId,
+            email,
+            userType: type as UserType, updatedBy: user
+        })
+        setLoading(false);
 
     }
     const removeCollboratorHandler = async (type: string) => { }
@@ -18,7 +27,7 @@ const Collaborator = ({ roomId, creatorId, collaborator, email, user }: Collabor
             <div className="flex gap-2">
 
                 <Image src={collaborator.avatar}
-                    alt={collaborator.name} width={36} height={36} />
+                    alt={collaborator.name} width={36} height={36} className='size-9 rounded-full' />
             </div>
             <div>
                 <p className='line-clamp-1 text-sm font-semibold leading-4 text-white'>
